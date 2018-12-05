@@ -15,4 +15,5 @@ pipeline {
                 archiveArtifacts artifacts: 'target/springboot-demo-0.0.1-SNAPSHOT.jar'
             }
         }
+    }
 }
