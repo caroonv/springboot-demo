@@ -1,16 +1,9 @@
-FROM anapsix/alpine-java:jdk8
+FROM maven:3.5.4-jdk-8-alpine
+WORKDIR /usr/src/java-code
+COPY . /usr/src/java-code/
+RUN mvn package
 
-ARG BA_DEMO_SERVICES_SERVER_PORT
-ENV BA_DEMO_SERVICES_SERVER_PORT ${BA_DEMO_SERVICES_SERVER_PORT:-9000}
-ARG BA_DEMO_SERVICES_LOG_DIR
-ENV BA_DEMO_SERVICES_LOG_DIR ${BA_DEMO_SERVICES_LOG_DIR:-/var/log/demoapp}
-
-WORKDIR /opt/demoapp
-COPY target/springboot-demo-0.0.1-SNAPSHOT.jar springboot-demo.jar
-RUN mkdir -p ${BA_DEMO_SERVICES_LOG_DIR}
-
-EXPOSE ${BA_DEMO_SERVICES_SERVER_PORT}
-
-CMD java \
-    -jar \
-    springboot-demo.jar
+WORKDIR /usr/src/java-app
+RUN cp /usr/src/java-code/target/*.jar ./demo.jar
+EXPOSE 9000
+CMD ["java", "-jar", "demo.jar"]
