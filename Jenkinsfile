@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        sudo docker build -t springboot-demo .
+                        docker build -t springboot-demo .
                     """
                 }
             }
