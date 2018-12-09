@@ -7,11 +7,10 @@ pipeline {
             }
             steps {
                 script {
-                    sudo service docker start
-                    app = docker.build('caroon/springboot-demo')
-                    app.inside {
-                        sh 'echo $(curl localhost:8080)'
-                    }
+                    sh """
+                        sudo service docker start
+                        sudo docker build -t springboot-demo .
+                    """
                 }
             }
         }
@@ -22,10 +21,11 @@ pipeline {
             }
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
+                    sh """
+                        docker tag springboot-demo:latest caroon/springboot-demo
+                        docker push caroon/springboot-demo
+                        docker rmi -f caroon/springboot-demo
+                    """
                 }
             }
         }
