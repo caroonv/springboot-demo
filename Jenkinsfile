@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker build -t springboot-demo .
+                        docker build -t caroon/springboot-demo .
                     """
                 }
             }
