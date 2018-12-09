@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker build -t caroon/springboot-demo:latest .
+                        docker build -t springboot-demo:latest .
                     """
                 }
             }
@@ -21,8 +21,9 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker push caroon/springboot-demo:latest
-                        docker rmi -f caroon/springboot-demo:latest
+                        docker tag springboot-demo:latest docker.io/caroon/springboot-demo
+                        docker push docker.io/caroon/springboot-demo:latest
+                        docker rmi -f springboot-demo:latest
                     """
                 }
             }
