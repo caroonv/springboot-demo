@@ -2,10 +2,33 @@ pipeline {
     agent any
     stages {
         stage ('Build Docker Image') {
-             steps {
-                echo 'Building Docker Image...'
-                sh 'docker build -t springboot-demo:latest .'
+            when {
+                branch 'master'
+            }
+            steps {
+                script {
+                    sudo service docker start
+                    app = docker.build('caroon/springboot-demo')
+                    app.inside {
+                        sh 'echo $(curl localhost:8080)'
+                    }
+                }
             }
         }
+
+        stage ('Push Docker Image') {
+            when {
+                branch 'master'
+            }
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
+                }
+            }
+        }
+
     }
 }
